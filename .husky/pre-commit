@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Linting em arquivos staged
+npx lint-staged
+
+# Testes com cobertura mínima de 90% em arquivos importantes
+npx jest --coverage --ci
