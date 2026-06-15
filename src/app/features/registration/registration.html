@@ -1,0 +1,288 @@
+<div class="registration">
+  <mat-card class="registration__card">
+    <header class="registration__header">
+      <div class="registration__title">
+        <span class="registration__title-icon">
+          <mat-icon>person_add</mat-icon>
+        </span>
+        <div>
+          <h1 class="registration__heading">Cadastro</h1>
+          @if (!showSummary()) {
+            <p class="registration__subtitle">
+              Etapa {{ currentStep() + 1 }} de {{ steps.length }} — {{ steps[currentStep()] }}
+            </p>
+          } @else {
+            <p class="registration__subtitle">Revise os dados antes de finalizar</p>
+          }
+        </div>
+      </div>
+
+      @if (!showSummary()) {
+        <ol class="registration__steps">
+          @for (label of steps; track label; let i = $index) {
+            <li
+              class="registration__step"
+              [class.is-active]="currentStep() === i"
+              [class.is-done]="currentStep() > i"
+            >
+              <span class="registration__step-index">
+                @if (currentStep() > i) {
+                  <mat-icon>check</mat-icon>
+                } @else {
+                  {{ i + 1 }}
+                }
+              </span>
+              <span class="registration__step-label">{{ label }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </header>
+
+    <div class="registration__body">
+      @if (currentStep() === 0) {
+        <form [formGroup]="personalForm" class="registration__form">
+          <mat-form-field class="registration__field--full">
+            <mat-label>Nome completo</mat-label>
+            <input matInput formControlName="fullName" autocomplete="name" />
+            @if (personalForm.controls.fullName.touched && personalForm.controls.fullName.invalid) {
+              <mat-error>Informe seu nome completo.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Data de nascimento</mat-label>
+            <input
+              matInput
+              formControlName="birthDate"
+              placeholder="dd/mm/aaaa"
+              inputmode="numeric"
+              (input)="applyMask(personalForm.controls.birthDate, masks.maskBirthDate)"
+            />
+            @if (personalForm.controls.birthDate.touched && personalForm.controls.birthDate.invalid) {
+              <mat-error>Data inválida.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>CPF</mat-label>
+            <input
+              matInput
+              formControlName="cpf"
+              placeholder="000.000.000-00"
+              inputmode="numeric"
+              (input)="applyMask(personalForm.controls.cpf, masks.maskCpf)"
+            />
+            @if (personalForm.controls.cpf.touched && personalForm.controls.cpf.invalid) {
+              <mat-error>CPF inválido.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="registration__field--full">
+            <mat-label>Telefone</mat-label>
+            <input
+              matInput
+              formControlName="phone"
+              placeholder="(00) 00000-0000"
+              inputmode="numeric"
+              (input)="applyMask(personalForm.controls.phone, masks.maskPhone)"
+            />
+            @if (personalForm.controls.phone.touched && personalForm.controls.phone.invalid) {
+              <mat-error>Telefone inválido.</mat-error>
+            }
+          </mat-form-field>
+        </form>
+      }
+
+      @if (currentStep() === 1) {
+        <form [formGroup]="residentialForm" class="registration__form">
+          <mat-form-field>
+            <mat-label>CEP</mat-label>
+            <input
+              matInput
+              formControlName="zipCode"
+              placeholder="00000-000"
+              inputmode="numeric"
+              (input)="applyMask(residentialForm.controls.zipCode, masks.maskCep)"
+              (blur)="onCepBlur()"
+            />
+            @if (cepLoading()) {
+              <mat-spinner matSuffix diameter="20" />
+            }
+            @if (residentialForm.controls.zipCode.touched && residentialForm.controls.zipCode.invalid) {
+              <mat-error>Informe o CEP.</mat-error>
+            }
+          </mat-form-field>
+
+          @if (cepError()) {
+            <p class="registration__hint registration__field--full">
+              <mat-icon>info</mat-icon>
+              {{ cepError() }}
+            </p>
+          }
+
+          <mat-form-field class="registration__field--full">
+            <mat-label>Endereço</mat-label>
+            <input matInput formControlName="address" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Bairro</mat-label>
+            <input matInput formControlName="neighborhood" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Cidade</mat-label>
+            <input matInput formControlName="city" />
+          </mat-form-field>
+
+          <mat-form-field class="registration__field--full">
+            <mat-label>Estado</mat-label>
+            <input matInput formControlName="state" maxlength="2" />
+          </mat-form-field>
+        </form>
+      }
+
+      @if (currentStep() === 2) {
+        <form [formGroup]="professionalForm" class="registration__form">
+          <mat-form-field class="registration__field--full">
+            <mat-label>Profissão</mat-label>
+            <mat-select formControlName="profession">
+              @for (profession of professions(); track profession.id) {
+                <mat-option [value]="profession.label">{{ profession.label }}</mat-option>
+              }
+            </mat-select>
+            @if (professionalForm.controls.profession.touched && professionalForm.controls.profession.invalid) {
+              <mat-error>Selecione uma profissão.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Empresa</mat-label>
+            <input matInput formControlName="company" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Salário</mat-label>
+            <input
+              matInput
+              formControlName="salary"
+              placeholder="R$ 0,00"
+              inputmode="numeric"
+              (input)="applyMask(professionalForm.controls.salary, masks.maskSalary)"
+            />
+            @if (professionalForm.controls.salary.touched && professionalForm.controls.salary.invalid) {
+              <mat-error>Informe um salário válido.</mat-error>
+            }
+          </mat-form-field>
+        </form>
+      }
+
+      @if (showSummary()) {
+        <section class="registration__summary">
+          <div class="registration__success">
+            <mat-icon>check_circle</mat-icon>
+            <span>Tudo certo! Confira o resumo do cadastro abaixo.</span>
+          </div>
+
+          <div class="registration__summary-block">
+            <div class="registration__summary-head">
+              <h3>Dados Pessoais</h3>
+              <button mat-button type="button" (click)="editStep(0)">Editar</button>
+            </div>
+            <dl class="registration__summary-grid">
+              <div>
+                <dt>Nome</dt>
+                <dd>{{ store.personalData()?.fullName }}</dd>
+              </div>
+              <div>
+                <dt>Nascimento</dt>
+                <dd>{{ store.personalData()?.birthDate }}</dd>
+              </div>
+              <div>
+                <dt>CPF</dt>
+                <dd>{{ store.personalData()?.cpf }}</dd>
+              </div>
+              <div>
+                <dt>Telefone</dt>
+                <dd>{{ store.personalData()?.phone }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="registration__summary-block">
+            <div class="registration__summary-head">
+              <h3>Informações Residenciais</h3>
+              <button mat-button type="button" (click)="editStep(1)">Editar</button>
+            </div>
+            <dl class="registration__summary-grid">
+              <div class="registration__summary-item--full">
+                <dt>Endereço</dt>
+                <dd>{{ store.residentialInfo()?.address }}</dd>
+              </div>
+              <div>
+                <dt>Bairro</dt>
+                <dd>{{ store.residentialInfo()?.neighborhood }}</dd>
+              </div>
+              <div>
+                <dt>CEP</dt>
+                <dd>{{ store.residentialInfo()?.zipCode }}</dd>
+              </div>
+              <div class="registration__summary-item--full">
+                <dt>Cidade / Estado</dt>
+                <dd>{{ store.residentialInfo()?.city }} / {{ store.residentialInfo()?.state }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="registration__summary-block">
+            <div class="registration__summary-head">
+              <h3>Informações Profissionais</h3>
+              <button mat-button type="button" (click)="editStep(2)">Editar</button>
+            </div>
+            <dl class="registration__summary-grid">
+              <div>
+                <dt>Profissão</dt>
+                <dd>{{ store.professionalInfo()?.profession }}</dd>
+              </div>
+              <div>
+                <dt>Empresa</dt>
+                <dd>{{ store.professionalInfo()?.company }}</dd>
+              </div>
+              <div>
+                <dt>Salário</dt>
+                <dd>{{ store.professionalInfo()?.salary | currency: 'BRL' }}</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+      }
+
+      <footer class="registration__actions">
+        @if (showSummary()) {
+          <button mat-stroked-button type="button" (click)="restart()">
+            <mat-icon>refresh</mat-icon>
+            Novo cadastro
+          </button>
+          <button mat-flat-button color="primary" type="button" (click)="exportPdf()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Exportar PDF
+          </button>
+        } @else {
+          @if (currentStep() > 0) {
+            <button mat-stroked-button type="button" (click)="back()">
+              <mat-icon>arrow_back</mat-icon>
+              Voltar
+            </button>
+          } @else {
+            <span class="registration__spacer"></span>
+          }
+          <button mat-flat-button color="primary" type="button" (click)="next()">
+            {{ isLastStep() ? 'Concluir' : 'Avançar' }}
+            <mat-icon iconPositionEnd>{{ isLastStep() ? 'check' : 'arrow_forward' }}</mat-icon>
+          </button>
+        }
+      </footer>
+    </div>
+  </mat-card>
+</div>

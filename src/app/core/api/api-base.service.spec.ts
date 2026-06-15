@@ -17,41 +17,44 @@ class ConcreteApiService extends ApiBaseService {
 }
 
 describe('ApiBaseService', () => {
-  let service: ConcreteApiService;
+  let apiService: ConcreteApiService;
   let httpController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting(), ConcreteApiService],
     });
-    service = TestBed.inject(ConcreteApiService);
+    apiService = TestBed.inject(ConcreteApiService);
     httpController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => httpController.verify());
 
   describe('get()', () => {
-    it('should make a GET request to baseUrl + path', async () => {
-      const resultPromise = lastValueFrom(service.testGet<{ id: number }>('/items'));
+    it('deve fazer um GET para baseUrl + path', async () => {
+      const userPromise = lastValueFrom(apiService.testGet<{ id: number }>('/users'));
 
-      const req = httpController.expectOne('/api/items');
-      expect(req.request.method).toBe('GET');
-      req.flush({ id: 1 });
+      const getRequest = httpController.expectOne('/api/users');
+      expect(getRequest.request.method).toBe('GET');
+      getRequest.flush({ id: 1 });
 
-      expect(await resultPromise).toEqual({ id: 1 });
+      expect(await userPromise).toEqual({ id: 1 });
     });
   });
 
   describe('post()', () => {
-    it('should make a POST request to baseUrl + path with body', async () => {
-      const resultPromise = lastValueFrom(service.testPost<{ created: boolean }>('/items', { name: 'test' }));
+    it('deve fazer um POST para baseUrl + path com o corpo informado', async () => {
+      const danielUser = { name: 'Daniel Secundino' };
+      const createdUserPromise = lastValueFrom(
+        apiService.testPost<{ created: boolean }>('/users', danielUser),
+      );
 
-      const req = httpController.expectOne('/api/items');
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ name: 'test' });
-      req.flush({ created: true });
+      const postRequest = httpController.expectOne('/api/users');
+      expect(postRequest.request.method).toBe('POST');
+      expect(postRequest.request.body).toEqual(danielUser);
+      postRequest.flush({ created: true });
 
-      expect(await resultPromise).toEqual({ created: true });
+      expect(await createdUserPromise).toEqual({ created: true });
     });
   });
 });

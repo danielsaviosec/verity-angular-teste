@@ -6,10 +6,10 @@ import { ProfessionService } from './profession.service';
 import { Profession } from '../../../domain/entities/profession.entity';
 
 describe('ProfessionService', () => {
-  let service: ProfessionService;
+  let professionService: ProfessionService;
   let httpController: HttpTestingController;
 
-  const mockProfessions: Profession[] = [
+  const availableProfessions: Profession[] = [
     { id: '1', label: 'Programador' },
     { id: '2', label: 'Médico' },
     { id: '3', label: 'Advogado' },
@@ -21,21 +21,21 @@ describe('ProfessionService', () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting(), ProfessionService],
     });
-    service = TestBed.inject(ProfessionService);
+    professionService = TestBed.inject(ProfessionService);
     httpController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => httpController.verify());
 
   describe('getProfessions()', () => {
-    it('should make GET to /api/professions', async () => {
-      const resultPromise = lastValueFrom(service.getProfessions());
+    it('deve fazer um GET para /api/professions', async () => {
+      const professionsPromise = lastValueFrom(professionService.getProfessions());
 
-      const req = httpController.expectOne('/api/professions');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockProfessions);
+      const professionsRequest = httpController.expectOne('/api/professions');
+      expect(professionsRequest.request.method).toBe('GET');
+      professionsRequest.flush(availableProfessions);
 
-      expect(await resultPromise).toEqual(mockProfessions);
+      expect(await professionsPromise).toEqual(availableProfessions);
     });
   });
 });

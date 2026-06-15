@@ -4,6 +4,9 @@ import angular from 'angular-eslint';
 
 export default tseslint.config(
   {
+    ignores: ['dist/**', 'coverage/**', '.angular/**'],
+  },
+  {
     files: ['**/*.ts'],
     extends: [
       ...tseslint.configs.recommended,
