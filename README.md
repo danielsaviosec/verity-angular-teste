@@ -1,59 +1,65 @@
-# VerityAngularTeste
+# Verity Angular Teste
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.28.
+Aplicação Angular 20 (standalone + SSR) com um formulário de **cadastro de usuário em múltiplas etapas**.
 
-## Development server
+## Funcionalidades
 
-To start a local development server, run:
+- **Cadastro em 3 etapas**: Dados Pessoais, Informações Residenciais e Informações Profissionais.
+- **Validações customizadas**: CPF, telefone, data de nascimento e salário.
+- **Máscaras de input**: CPF, telefone, CEP, data e moeda.
+- **Busca de endereço por CEP** (integração ViaCEP, com fallback mock via interceptor).
+- **Tela de resumo** com edição de cada etapa antes de finalizar.
+- **Exportação em PDF** dos dados cadastrados (`jspdf`).
+- **Gerenciamento de estado** com Signals (`RegistrationStore`).
+- **Localização pt-BR** e UI com Angular Material + Tailwind CSS.
+- **SSR** com Angular Universal (Express).
 
-```bash
-ng serve
-```
+## Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular 20 (standalone, zoneless, SSR)
+- Angular Material + Tailwind CSS 4
+- RxJS, jsPDF
+- Jest (testes unitários), ESLint + Prettier, Husky + lint-staged
 
-## Code scaffolding
+## Como executar
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Localmente
 
 ```bash
-ng build
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Acesse `http://localhost:4200/` (redireciona para `/cadastro`).
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Outros comandos
 
 ```bash
-ng test
+npm run build           # build de produção
+npm test                # testes unitários (Jest)
+npm run test:coverage   # testes com cobertura
+npm run lint            # análise de lint
 ```
 
-## Running end-to-end tests
+## Docker
 
-For end-to-end (e2e) testing, run:
+O projeto inclui um `Dockerfile` multi-stage (deps → build → produção, rodando o servidor SSR na porta `4000`) e um `docker-compose.yml` com dois serviços:
+
+- **dev**: ambiente de desenvolvimento com hot reload na porta `4200`.
+- **prod**: build de produção servindo via SSR na porta `4000`.
+
+### Desenvolvimento
 
 ```bash
-ng e2e
+docker compose up dev
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Acesse `http://localhost:4200/`.
 
-## Additional Resources
+### Produção
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+docker compose up prod --build
+```
+
+Acesse `http://localhost:4000/`.
