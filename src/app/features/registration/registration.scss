@@ -1,0 +1,319 @@
+:host {
+  display: block;
+}
+
+.registration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(135deg, #eef2f7 0%, #f8fafc 45%, #e2e8f0 100%);
+
+  // ---- Card ----------------------------------------------------------------
+  &__card {
+    width: 100%;
+    max-width: 640px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+  }
+
+  // ---- Header --------------------------------------------------------------
+  &__header {
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid #eef0f4;
+    background: #fff;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  &__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 14px;
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  }
+
+  &__heading {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0f172a;
+  }
+
+  &__subtitle {
+    margin: 0.125rem 0 0;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  // ---- Stepper -------------------------------------------------------------
+  &__steps {
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__step {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    text-align: center;
+
+    // conector entre as etapas
+    &:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      top: 1.25rem;
+      right: 50%;
+      width: 100%;
+      height: 2px;
+      background: #e2e8f0;
+      transform: translateX(-1.25rem);
+      transition: background-color 0.25s ease;
+    }
+
+    &.is-active::before,
+    &.is-done::before {
+      background: #10b981;
+    }
+  }
+
+  &__step-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      box-shadow 0.25s ease;
+
+    mat-icon {
+      width: 1.125rem;
+      height: 1.125rem;
+      font-size: 1.125rem;
+      line-height: 1.125rem;
+    }
+  }
+
+  &__step-label {
+    max-width: 7rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #94a3b8;
+  }
+
+  &__step.is-active &__step-index {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  }
+
+  &__step.is-active &__step-label {
+    color: #0f172a;
+  }
+
+  &__step.is-done &__step-index {
+    background: #10b981;
+    color: #fff;
+  }
+
+  &__step.is-done &__step-label {
+    color: #475569;
+  }
+
+  // ---- Body / Formulário ---------------------------------------------------
+  &__body {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+
+  &__form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 1rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  &__field--full {
+    grid-column: 1 / -1;
+  }
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 10px;
+    background: #fffbeb;
+    color: #b45309;
+    font-size: 0.875rem;
+
+    mat-icon {
+      width: 1.125rem;
+      height: 1.125rem;
+      font-size: 1.125rem;
+      line-height: 1.125rem;
+    }
+  }
+
+  // ---- Resumo --------------------------------------------------------------
+  &__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__success {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1fae5;
+    border-radius: 14px;
+    background: #ecfdf5;
+    color: #065f46;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    mat-icon {
+      color: #10b981;
+    }
+  }
+
+  &__summary-block {
+    padding: 1rem 1.25rem 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #f8fafc;
+  }
+
+  &__summary-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+  }
+
+  &__summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+    margin: 0;
+
+    dt {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #94a3b8;
+    }
+
+    dd {
+      margin: 0.125rem 0 0;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: #0f172a;
+      word-break: break-word;
+    }
+  }
+
+  &__summary-item--full {
+    grid-column: 1 / -1;
+  }
+
+  // ---- Ações ---------------------------------------------------------------
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eef0f4;
+  }
+
+  &__spacer {
+    display: block;
+  }
+
+  // ---- Responsivo ----------------------------------------------------------
+  @media (max-width: 600px) {
+    padding: 0;
+
+    &__card {
+      border-radius: 0;
+      min-height: 100vh;
+      box-shadow: none;
+    }
+
+    &__header {
+      padding: 1.25rem 1.125rem;
+    }
+
+    &__body {
+      padding: 1.25rem 1.125rem 1.5rem;
+    }
+
+    &__step-label {
+      display: none;
+    }
+
+    &__form,
+    &__summary-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    &__spacer {
+      display: none;
+    }
+  }
+}

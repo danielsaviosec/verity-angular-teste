@@ -20,6 +20,7 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": ["jspdf"],
             "assets": [
               {
                 "glob": "**/*",
@@ -27,6 +28,7 @@
               }
             ],
             "styles": [
+              "src/tailwind.css",
               "src/styles.scss"
             ],
             "server": "src/main.server.ts",
@@ -78,22 +80,15 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:jest",
           "options": {
-            "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "tsConfig": "tsconfig.spec.json"
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "b4b38eab-ff79-42e4-8ede-4a990655a7a3"
   }
 }
