@@ -15,22 +15,22 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance).toBeTruthy();
+  it('deve criar o app', () => {
+    const appFixture = TestBed.createComponent(App);
+    expect(appFixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the toolbar', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('mat-toolbar')).not.toBeNull();
+  it('deve renderizar a barra de ferramentas', async () => {
+    const appFixture = TestBed.createComponent(App);
+    await appFixture.whenStable();
+    const appElement = appFixture.nativeElement as HTMLElement;
+    expect(appElement.querySelector('mat-toolbar')).not.toBeNull();
   });
 
-  it('should render the router outlet', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('router-outlet')).not.toBeNull();
+  it('deve renderizar o router outlet', async () => {
+    const appFixture = TestBed.createComponent(App);
+    await appFixture.whenStable();
+    const appElement = appFixture.nativeElement as HTMLElement;
+    expect(appElement.querySelector('router-outlet')).not.toBeNull();
   });
 });

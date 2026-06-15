@@ -4,11 +4,11 @@ import { CepRequest, CepResponse } from '../../domain/entities/cep.entity';
 import { Profession } from '../../domain/entities/profession.entity';
 
 const CEP_DATABASE: Record<string, CepResponse> = {
-  '12345678': { address: 'Rua do Daniel', neighborhood: 'Bairro do Daniel', city: 'Ceará', state: 'CE' },
-  '87654321': { address: 'Rua do Batman', neighborhood: 'Bairro do Batman', city: 'Rio de Janeiro', state: 'RJ' },
-  '12457890': { address: 'Avenida Famosa', neighborhood: 'Centro', city: 'Sao Paulo', state: 'SP' },
+  '60530320': { address: 'Rua 206', neighborhood: 'Conjunto Ceará', city: 'Fortaleza', state: 'CE' },
+  '87654321': { address: 'Rua do Batman', neighborhood: 'Bairro do Morcego', city: 'Rio de Janeiro', state: 'RJ' },
+  '12457890': { address: 'Avenida Famosa', neighborhood: 'Centro', city: 'São Paulo', state: 'SP' },
   '11223344': { address: 'Avenida da Igreja', neighborhood: 'Centro Histórico', city: 'Recife', state: 'PE' },
-  '55667788': { address: 'Rua 105', neighborhood: 'Centro', city: 'Curitiba', state: 'PR' },
+  '55667788': { address: 'Rua das Araucárias', neighborhood: 'Centro', city: 'Curitiba', state: 'PR' },
 };
 
 const PROFESSIONS: Profession[] = [
@@ -20,9 +20,9 @@ const PROFESSIONS: Profession[] = [
 ];
 
 function mockCepResponse(cep: string): CepResponse {
-  const normalized = cep.replace(/\D/g, '');
+  const normalizedCep = cep.replace(/\D/g, '');
   return (
-    CEP_DATABASE[normalized] ?? {
+    CEP_DATABASE[normalizedCep] ?? {
       address: 'Rua Exemplo',
       neighborhood: 'Bairro Exemplo',
       city: 'Cidade Exemplo',
@@ -31,15 +31,15 @@ function mockCepResponse(cep: string): CepResponse {
   );
 }
 
-export const mockApiInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.url.endsWith('/api/cep') && req.method === 'POST') {
-    const body = req.body as CepRequest;
-    return of(new HttpResponse({ status: 200, body: mockCepResponse(body.cep) }));
+export const mockApiInterceptor: HttpInterceptorFn = (request, nextHandler) => {
+  if (request.url.endsWith('/api/cep') && request.method === 'POST') {
+    const cepRequestBody = request.body as CepRequest;
+    return of(new HttpResponse({ status: 200, body: mockCepResponse(cepRequestBody.cep) }));
   }
 
-  if (req.url.endsWith('/api/professions') && req.method === 'GET') {
+  if (request.url.endsWith('/api/professions') && request.method === 'GET') {
     return of(new HttpResponse<Profession[]>({ status: 200, body: PROFESSIONS }));
   }
 
-  return next(req);
+  return nextHandler(request);
 };

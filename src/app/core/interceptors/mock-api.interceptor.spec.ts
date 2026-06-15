@@ -7,8 +7,11 @@ import { CepResponse } from '../../domain/entities/cep.entity';
 import { Profession } from '../../domain/entities/profession.entity';
 
 describe('mockApiInterceptor', () => {
-  let http: HttpClient;
+  let httpClient: HttpClient;
   let httpController: HttpTestingController;
+
+  const danielCep = '60530320';
+  const danielCepWithMask = '60530-320';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,37 +20,43 @@ describe('mockApiInterceptor', () => {
         provideHttpClientTesting(),
       ],
     });
-    http = TestBed.inject(HttpClient);
+    httpClient = TestBed.inject(HttpClient);
     httpController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => httpController.verify());
 
   describe('POST /api/cep', () => {
-    it('should return address for a known CEP', async () => {
-      const result = await lastValueFrom(http.post<CepResponse>('/api/cep', { cep: '12345678' }));
+    it('deve devolver o endereço do Daniel para um CEP conhecido', async () => {
+      const danielAddress = await lastValueFrom(
+        httpClient.post<CepResponse>('/api/cep', { cep: danielCep }),
+      );
 
-      expect(result).toEqual({
-        address: 'Rua do Daniel',
-        neighborhood: 'Bairro do Daniel',
-        city: 'Ceará',
+      expect(danielAddress).toEqual({
+        address: 'Rua 206',
+        neighborhood: 'Conjunto Ceará',
+        city: 'Fortaleza',
         state: 'CE',
       });
     });
 
-    it('should normalize masked CEP before lookup', async () => {
-      const result = await lastValueFrom(http.post<CepResponse>('/api/cep', { cep: '12345-678' }));
+    it('deve limpar a máscara do CEP antes de procurar a casa do Daniel', async () => {
+      const danielAddress = await lastValueFrom(
+        httpClient.post<CepResponse>('/api/cep', { cep: danielCepWithMask }),
+      );
 
-      expect(result.city).toBe('Ceará');
-      expect(result.state).toBe('CE');
+      expect(danielAddress.city).toBe('Fortaleza');
+      expect(danielAddress.state).toBe('CE');
     });
   });
 
   describe('GET /api/professions', () => {
-    it('should return a list with at least 5 professions', async () => {
-      const result = await lastValueFrom(http.get<Profession[]>('/api/professions'));
+    it('deve devolver uma lista com pelo menos 5 profissões', async () => {
+      const availableProfessions = await lastValueFrom(
+        httpClient.get<Profession[]>('/api/professions'),
+      );
 
-      expect(result.length).toBeGreaterThanOrEqual(5);
+      expect(availableProfessions.length).toBeGreaterThanOrEqual(5);
     });
   });
 });
