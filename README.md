@@ -20,6 +20,7 @@ Aplicação Angular 20 (standalone + SSR) com um formulário de **cadastro de us
 - Angular Material + Tailwind CSS 4
 - RxJS, jsPDF
 - Jest (testes unitários), ESLint + Prettier, Husky + lint-staged
+- Cursor + Claude
 
 ## Como executar
 
